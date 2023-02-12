@@ -1,11 +1,14 @@
 (ns calar.core
-  (:require [calar.config :as config])
-  (:require [calar.scratcher :as scratcher])
-  (:require [calar.converter :as converter])
+  (:require [calar.scratcher :as scratcher]
+            [calar.converter :as converter]
+            [calar.cli :as cli])
   (:gen-class))
 
 
-(defn -main []
-  (-> (scratcher/scratch-lessons (-> config/config :forms :do) "knt" "351")
-      converter/edn->ical
-      println))
+(defn -main [& args]
+  (let [{:keys [options exit-message ok?]} (cli/validate-args args)]
+    (if exit-message
+      (cli/exit (if ok? 0 1) exit-message)
+      (-> (scratcher/scratch-lessons options)
+          converter/edn->ical
+          println))))

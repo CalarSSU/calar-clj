@@ -1,4 +1,5 @@
-{:tracto-prefix "https://scribabot.tk/api/v1.0/"
+{:description "Calar is an interface for accessing SSU schedule as iCal"
+ :tracto-prefix "https://scribabot.tk/api/v1.0/"
  :forms {:do "full"
          :zo "extrumaral"}
  :ical {:title "Calar"

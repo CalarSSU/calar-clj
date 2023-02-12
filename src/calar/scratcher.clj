@@ -1,24 +1,24 @@
 (ns calar.scratcher
-  (:require [calar.config :as config])
-  (:require [clojure.string :as str])
-  (:require [cheshire.core :as cheshire])
-  (:require [clj-http.client :as client]))
+  (:require [calar.config :as config]
+            [clojure.string :as str]
+            [cheshire.core :as cheshire]
+            [clj-http.client :as client]))
 
 
 (defn- request-schedule
   "Returns schedule for specific group using Tracto API in JSON.
    Read more: https://github.com/ScribaSSU/tracto"
-  [edu-form department group]
+  [options]
   (client/get (str (:tracto-prefix config/config) "/schedule/"
-                   edu-form "/"
-                   department "/"
-                   group)))
+                   (-> config/config :forms :do) "/"
+                   (:department options) "/"
+                   (:group options))))
 
 
 (defn scratch-lessons
-  "Returns schedule for specific group in EDN"
-  [edu-form department group]
-  (-> (request-schedule edu-form department group)
+  "Returns schedule for specific group in EDN format"
+  [options]
+  (-> (request-schedule options)
       :body
       (cheshire/parse-string true)
       :lessons))
