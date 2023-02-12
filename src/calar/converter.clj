@@ -4,6 +4,7 @@
 
 
 (def empty-ical
+  "Returns new empty iCal with metadata from config"
   (let [ical-config (config/config :ical)]
     (ical/create-cal (:author ical-config)
                      (:title ical-config)
@@ -12,20 +13,25 @@
 
 
 (import java.util.Date)
-(defn parse-time [lesson-time week-day]
+(defn parse-time
+  "Returns a pair of java.util.Date: start and end of lesson, using EDN from
+   scratcher as input"
+  [lesson-time week-day]
   [(Date. (.getYear (Date.))
-          (:month config/start-date)
-          (+ (dec week-day) (:day config/start-date))
+          (-> config/cur-semester :start :month)
+          (+ (dec week-day) (-> config/cur-semester :start :day))
           (:hourStart lesson-time)
           (:minuteStart lesson-time))
    (Date. (.getYear (Date.))
-          (:month config/start-date)
-          (+ (dec week-day) (:day config/start-date))
+          (-> config/cur-semester :start :month)
+          (+ (dec week-day) (-> config/cur-semester :start :day))
           (:hourEnd lesson-time)
           (:minuteEnd lesson-time))])
 
 
-(defn create-lesson [lesson]
+(defn create-lesson
+  "Returns new iCal event created from EDN lesson"
+  [lesson]
   (let [title (:name lesson)
         [start end] (parse-time (:lessonTime lesson)
                                 (-> lesson :day :dayNumber))]
@@ -35,8 +41,10 @@
                        :organizer (-> config/config :ical :organizer))))
 
 
-(defn edn->ical [lessons]
- (let [cal empty-ical
-       ical-events (map create-lesson lessons)
-       _ (reduce (fn [cal event] (ical/add-event! cal event)) cal ical-events)]
-   (ical/output-calendar cal)))
+(defn edn->ical
+  "Converts EDN lessons into iCal object ready for export"
+  [edn-lessons]
+  (let [cal empty-ical
+        ical-lessons (map create-lesson edn-lessons)
+        _ (reduce (fn [cal event] (ical/add-event! cal event)) cal ical-lessons)]
+    (ical/output-calendar cal)))

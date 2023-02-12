@@ -1,11 +1,22 @@
 (ns calar.config
-  (:require [clojure.edn :as edn]))
+  (:require [clojure.edn :as edn]
+            [calar.config :as config]))
 
 
 (def config
+  "Config parsed into EDN"
   (-> "resources/config.edn" slurp edn/read-string))
 
 
-(def current-semester (if (= 1 (:current-semester config)) first second))
-(def start-date (-> config :semesters current-semester :start))
-(def end-date (-> config :semesters current-semester :end))
+(defn- get-semester [semestre]
+  (-> config
+      :semesters
+      semestre))
+
+
+(def cur-semester
+  "Current semester: start and end dates"
+  (-> config
+      :semesters
+      :current
+      get-semester))

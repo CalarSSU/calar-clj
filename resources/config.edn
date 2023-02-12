@@ -6,12 +6,12 @@
         :version "V0.1"
         :lang "RU"
         :organizer "https://calar.ru"}
- :current-semester 2
- :semesters [{:start {:day 1
-                      :month 9}
-              :end {:day 20
-                    :month 12}}
-              {:start {:day 6
-                       :month 2}
-               :end {:day 31
-                     :month 5}}]}
+ :semesters {:current :second
+             :first {:start {:day 1
+                             :month 9}
+                     :end {:day 20
+                           :month 12}}
+             :second {:start {:day 6
+                              :month 2}
+                      :end {:day 31
+                            :month 5}}}}
