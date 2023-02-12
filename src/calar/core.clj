@@ -1,9 +1,11 @@
 (ns calar.core
+  (:require [calar.config :as config])
   (:require [calar.scratcher :as scratcher])
+  (:require [calar.converter :as converter])
   (:gen-class))
 
 
 (defn -main []
-  (println
-   (scratcher/get-subgroups
-    (scratcher/get-edn-schedule ((comp :do :forms) scratcher/config) "knt" "351"))))
+  (-> (scratcher/scratch-lessons (-> config/config :forms :do) "knt" "351")
+      converter/edn->ical
+      println))
