@@ -9,10 +9,10 @@
         :organizer "https://calar.ru"}
  :semesters {:current :second
              :first {:start {:day 1
-                             :month 9}
+                             :month 7}
                      :end {:day 20
-                           :month 12}}
+                           :month 11}}
              :second {:start {:day 6
-                              :month 2}
+                              :month 1}
                       :end {:day 31
                             :month 5}}}}

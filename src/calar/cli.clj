@@ -4,6 +4,7 @@
             [calar.config :as config]
             [calar.scratcher :as scratcher]))
 
+
 (def cli-options
   [["-d" "--department DEPARTMENT" "Department inside SSU"]
    ["-g" "--group GROUP" "Study group inside department"]
@@ -46,10 +47,9 @@
       {:exit-message (usage summary) :ok? true}
       errors
       {:exit-message (error-msg errors) :ok? false}
-      (not-any? #{(:department options)} (map :url scratcher/scratch-departments))
-      {:exit-message (error-msg ["Unknown department"]) :ok? false}
       (missing-required? options)
       {:exit-message (error-msg ["Not all information was provided"]) :ok? false}
+      (not-any? #{(:department options)} (map :url scratcher/scratch-departments))
+      {:exit-message (error-msg ["Unknown department"]) :ok? false}
       :else
       {:options options})))
-
