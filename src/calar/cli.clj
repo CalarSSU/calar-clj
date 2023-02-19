@@ -5,20 +5,20 @@
             [calar.scratcher :as scratcher]))
 
 
-(def cli-options
+(def ^:private cli-options
   [["-d" "--department DEPARTMENT" "Department inside SSU"]
    ["-g" "--group GROUP" "Study group inside department"]
    ["-h" "--help"]])
 
 
-(defn missing-required?
+(defn- missing-required?
   "Returns true if opts is missing any of the required-opts"
   [opts]
   (let [required-opts #{:department :group}]
     (not-every? (-> opts keys set) required-opts)))
 
 
-(defn usage [options-summary]
+(defn- usage [options-summary]
   (->> [(:description config/config)
         ""
         "Options:"
@@ -26,7 +26,7 @@
        (str/join \newline)))
 
 
-(defn error-msg [errors]
+(defn- error-msg [errors]
   (str "ERROR: "
        (str/join ", " errors)))
 

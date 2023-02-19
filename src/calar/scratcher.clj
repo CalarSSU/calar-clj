@@ -9,9 +9,12 @@
   "Returns schedule for specific group using Tracto API in JSON.
    Read more: https://github.com/ScribaSSU/tracto"
   [options]
-  (client/get (str (:tracto-prefix config/config) "/schedule/"
-                   (-> config/config :forms :do) "/"
-                   (:department options) "/"
+  (client/get (str (:tracto-prefix config/config)
+                   "/schedule/"
+                   (-> config/config :forms :do)
+                   "/"
+                   (:department options)
+                   "/"
                    (:group options))))
 
 

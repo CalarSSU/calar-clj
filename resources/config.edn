@@ -6,7 +6,7 @@
         :author "Calar"
         :version "V0.1"
         :lang "RU"
-        :organizer "https://calar.ru"}
+        :organizer "MAILTO:kniit@info.sgu.ru"}
  :semesters {:current :second
              :first {:start {:day 1
                              :month 7}
