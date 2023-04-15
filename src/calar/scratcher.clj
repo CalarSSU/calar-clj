@@ -1,35 +1,47 @@
 (ns calar.scratcher
-  (:require [clojure.edn :as edn])
-  (:require [clojure.string :as str])
-  (:require [cheshire.core :as cheshire])
-  (:require [clj-http.client :as client]))
+  (:require [calar.config :as config]
+            [clojure.string :as str]
+            [cheshire.core :as cheshire]
+            [clj-http.client :as client]))
 
 
-(def config
-  (-> "resources/config.edn" slurp edn/read-string))
+(defn- request-schedule
+  "Returns schedule for specific group using Tracto API in JSON.
+   Read more: https://github.com/ScribaSSU/tracto"
+  [options]
+  (client/get (str (:tracto-prefix config/config)
+                   "/schedule/"
+                   (-> config/config :forms :do)
+                   "/"
+                   (:department options)
+                   "/"
+                   (:group options))))
 
 
-(defn get-schedule [edu-form, department, group]
-  (client/get (str (:tracto-prefix  config) "/schedule/"
-                   edu-form "/"
-                   department "/"
-                   group)))
+(defn scratch-lessons
+  "Returns schedule for specific group in EDN format"
+  [options]
+  (-> (request-schedule options)
+      :body
+      (cheshire/parse-string true)
+      :lessons))
 
 
-(defn get-edn-schedule [edu-form, department, group]
-  (cheshire/parse-string (:body (get-schedule edu-form department group)) true))
-
-
-(def get-departments
-  (-> (str (:tracto-prefix config) "/departments")
+(def scratch-departments
+  "Returns list of all available departments"
+  (-> (str (:tracto-prefix config/config) "/departments")
       client/get
       :body
       (cheshire/parse-string true)
       :departmentsList))
 
 
-(defn get-subgroups [edn-schedule]
+(defn find-subgroups
+  "Returns list of all subgroups using EDN schedule"
+  [edn-schedule]
   (->> edn-schedule
-      :lessons
-      (map (comp str/trim :subGroup))
-      (remove str/blank?)))
+       :lessons
+       (map (comp str/trim :subGroup))
+       (remove str/blank?)
+       distinct
+       sort))

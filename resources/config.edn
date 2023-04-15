@@ -1,3 +1,18 @@
-{:tracto-prefix "https://scribabot.tk/api/v1.0/"
+{:description "Calar is an interface for accessing SSU schedule as iCal"
+ :tracto-prefix "https://scribabot.tk/api/v1.0/"
  :forms {:do "full"
-         :zo "extrumaral"}}
+         :zo "extrumaral"}
+ :ical {:title "Calar"
+        :author "Calar"
+        :version "V0.1"
+        :lang "RU"
+        :organizer "MAILTO:kniit@info.sgu.ru"}
+ :semesters {:current :second
+             :first {:start {:day 1
+                             :month 7}
+                     :end {:day 20
+                           :month 11}}
+             :second {:start {:day 6
+                              :month 1}
+                      :end {:day 31
+                            :month 5}}}}
